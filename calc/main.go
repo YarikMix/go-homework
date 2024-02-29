@@ -3,8 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"unicode"
+	"strconv"
 )
+
+import "unicode"
 
 var result = make([]string, 0)
 var numberBuffer = make([]rune, 0)
@@ -51,6 +53,15 @@ func isOperator(ch rune) bool {
 	}
 
 	return false
+}
+
+func isNumeric(str string) bool {
+	for _, c := range str {
+		if !unicode.IsDigit(c) {
+			return false
+		}
+	}
+	return true
 }
 
 func tokenize(raw string) {
@@ -101,6 +112,132 @@ func tokenize(raw string) {
 	}
 }
 
+type stack []string
+
+func (s stack) Push(v string) stack {
+	return append(s, v)
+}
+
+func (s stack) Pop() (stack, string) {
+	l := len(s)
+	return s[:l-1], s[l-1]
+}
+
+func (s stack) Peek() string {
+	l := len(s)
+	return s[l-1]
+}
+
+var ops = make(map[string]int)
+
+func infixToPostfix(tokenList []string) (postfixList stack) {
+	ops["("] = 0
+	ops["+"] = 1
+	ops["-"] = 1
+	ops["/"] = 2
+	ops["*"] = 2
+
+	var opStack stack = make([]string, 0)
+
+	var tmp string
+
+	for _, token := range tokenList {
+
+		if isNumeric(token) {
+
+			postfixList = postfixList.Push(token)
+
+		} else if token == "(" {
+
+			opStack = opStack.Push(token)
+
+		} else if token == ")" {
+
+			opStack, tmp = opStack.Pop()
+			for tmp != "(" {
+				postfixList = postfixList.Push(tmp)
+				opStack, tmp = opStack.Pop()
+			}
+
+		} else {
+
+			for len(opStack) > 0 && ops[opStack.Peek()] >= ops[token] {
+				opStack, tmp = opStack.Pop()
+				postfixList = postfixList.Push(tmp)
+			}
+
+			opStack = opStack.Push(token)
+		}
+	}
+
+	for len(opStack) > 0 {
+		opStack, tmp = opStack.Pop()
+		postfixList = postfixList.Push(tmp)
+	}
+
+	return postfixList
+
+}
+
+func ConvertToInt(x string) int {
+	var i, _ = strconv.Atoi(x)
+	return i
+}
+
+func evalBinary(x string, y string, op string) int {
+	if op == "+" {
+		return ConvertToInt(x) + ConvertToInt(y)
+	}
+
+	if op == "-" {
+		return ConvertToInt(x) - ConvertToInt(y)
+	}
+
+	if op == "*" {
+		return ConvertToInt(x) * ConvertToInt(y)
+	}
+
+	if op == "/" {
+		return ConvertToInt(x) / ConvertToInt(y)
+	}
+
+	return -1
+}
+
+func eval(tokens []string) int {
+	var res stack = make([]string, 0)
+
+	var x, y string
+
+	for _, token := range tokens {
+
+		var _, ok = ops[token] // Если встретился оператор (+, -, *, /)
+
+		if ok {
+
+			res, y = res.Pop()
+			res, x = res.Pop()
+
+			res = res.Push(strconv.Itoa(evalBinary(x, y, token)))
+
+		} else { // Если встретилось число
+
+			res = res.Push(token)
+
+		}
+
+	}
+
+	if len(res) > 1 {
+
+		panic("Expression not valid")
+
+	}
+
+	res, x = res.Pop()
+	return ConvertToInt(x)
+}
+
 func main() {
 	flag.Parse()
 
@@ -108,7 +245,7 @@ func main() {
 
 	tokenize(raw)
 
-	for _, str := range result {
-		fmt.Println(str)
-	}
+	var postfix = infixToPostfix(result)
+
+	fmt.Println(eval(postfix))
 }
