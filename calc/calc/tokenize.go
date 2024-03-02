@@ -1,6 +1,7 @@
 package calc
 
 import (
+	"errors"
 	"unicode"
 )
 
@@ -49,7 +50,7 @@ func isOperator(ch rune) bool {
 	return false
 }
 
-func Tokenize(raw string) []string {
+func Tokenize(raw string) ([]string, error) {
 	var result = make([]string, 0)
 	var numberBuffer = make([]rune, 0)
 	var operatorBuffer = make([]rune, 0)
@@ -65,11 +66,6 @@ func Tokenize(raw string) []string {
 			if len(operatorBuffer) > 0 {
 				result, operatorBuffer = emptyOperatorBuffer(result, operatorBuffer)
 			}
-
-		} else if isOperator(ch) {
-
-			result, numberBuffer = emptyNumberBufferAsLiteral(result, numberBuffer)
-			operatorBuffer = append(operatorBuffer, ch)
 
 		} else if isLeftParenthesis(ch) {
 
@@ -89,6 +85,14 @@ func Tokenize(raw string) []string {
 			result, numberBuffer = emptyNumberBufferAsLiteral(result, numberBuffer)
 			result = append(result, ")")
 
+		} else {
+
+			if isOperator(ch) {
+				result, numberBuffer = emptyNumberBufferAsLiteral(result, numberBuffer)
+				operatorBuffer = append(operatorBuffer, ch)
+			} else {
+				return nil, errors.New("Обнаружен неизвестный символ")
+			}
 		}
 
 	}
@@ -101,5 +105,5 @@ func Tokenize(raw string) []string {
 		result, operatorBuffer = emptyOperatorBuffer(result, operatorBuffer)
 	}
 
-	return result
+	return result, nil
 }

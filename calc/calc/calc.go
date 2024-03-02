@@ -32,12 +32,16 @@ func evalBinary(x string, y string, op string) float64 {
 
 func Eval(raw string) (float64, error) {
 
-	var result = Tokenize(raw)
+	var result, tokenizeError = Tokenize(raw)
+
+	if tokenizeError != nil {
+		return 0, tokenizeError
+	}
 
 	var postfix, err = InfixToPostfix(result)
 
 	if err != nil {
-		return 0, errors.New("expression not valid")
+		return 0, err
 	}
 
 	var res Stack = make([]string, 0)
@@ -64,7 +68,7 @@ func Eval(raw string) (float64, error) {
 	}
 
 	if len(res) > 1 {
-		return 0, errors.New("expression not valid")
+		return 0, errors.New("Не получилось спарсить выражение")
 	}
 
 	res, x = res.Pop()

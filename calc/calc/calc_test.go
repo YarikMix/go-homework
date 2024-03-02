@@ -106,6 +106,12 @@ func TestEvalFail(t *testing.T) {
 				raw: "15/-25",
 			},
 		},
+		{
+			name: "Test6",
+			args: args{
+				raw: "10%15",
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
