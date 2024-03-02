@@ -1,6 +1,8 @@
 package calc
 
-import "unicode"
+import (
+	"unicode"
+)
 
 var result = make([]string, 0)
 var numberBuffer = make([]rune, 0)
@@ -49,7 +51,7 @@ func isOperator(ch rune) bool {
 	return false
 }
 
-func tokenize(raw string) {
+func Tokenize(raw string) []string {
 	var str = []rune(raw)
 
 	for _, ch := range str {
@@ -95,4 +97,6 @@ func tokenize(raw string) {
 	if len(operatorBuffer) > 0 {
 		emptyOperatorBuffer()
 	}
+
+	return result
 }
