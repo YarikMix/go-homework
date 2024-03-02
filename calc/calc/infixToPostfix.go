@@ -1,6 +1,9 @@
 package calc
 
-import "unicode"
+import (
+	"errors"
+	"unicode"
+)
 
 func isNumeric(str string) bool {
 	for _, c := range str {
@@ -13,8 +16,9 @@ func isNumeric(str string) bool {
 
 var ops = make(map[string]int)
 
-func InfixToPostfix(tokenList []string) (postfixList Stack) {
-	ops["("] = 0
+func InfixToPostfix(tokenList []string) (Stack, error) {
+	var postfixList Stack = make([]string, 0)
+
 	ops["+"] = 1
 	ops["-"] = 1
 	ops["/"] = 2
@@ -35,6 +39,10 @@ func InfixToPostfix(tokenList []string) (postfixList Stack) {
 			opStack = opStack.Push(token)
 
 		} else if token == ")" {
+
+			if len(opStack) == 0 {
+				return nil, errors.New("expression not valid")
+			}
 
 			opStack, tmp = opStack.Pop()
 			for tmp != "(" {
@@ -58,6 +66,6 @@ func InfixToPostfix(tokenList []string) (postfixList Stack) {
 		postfixList = postfixList.Push(tmp)
 	}
 
-	return postfixList
+	return postfixList, nil
 
 }

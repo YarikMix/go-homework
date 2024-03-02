@@ -31,12 +31,12 @@ func writeLines(writer io.Writer, lines []string) error {
 func Parse() uniq.Args {
 	var args uniq.Args
 
-	flag.BoolVar(&args.C, "c", false, "")
-	flag.BoolVar(&args.D, "d", false, "")
-	flag.BoolVar(&args.U, "u", false, "")
-	flag.BoolVar(&args.I, "i", false, "")
-	flag.IntVar(&args.F, "f", 0, "")
-	flag.IntVar(&args.S, "s", 0, "")
+	flag.BoolVar(&args.C, "c", false, "Подсчитать количество встречаний строки во входных данных. Вывести это число перед строкой отделив пробелом.")
+	flag.BoolVar(&args.D, "d", false, "Вывести только те строки, которые повторились во входных данных.")
+	flag.BoolVar(&args.U, "u", false, "Вывести только те строки, которые не повторились во входных данных.")
+	flag.BoolVar(&args.I, "i", false, "Не учитывать первые num_fields полей в строке. Полем в строке является непустой набор символов отделённый пробелом.")
+	flag.IntVar(&args.F, "f", 0, "Не учитывать первые num_chars символов в строке. При использовании вместе с параметром -f учитываются первые символы после num_fields полей (не учитывая пробел-разделитель после последнего поля).")
+	flag.IntVar(&args.S, "s", 0, "Не учитывать регистр букв.")
 
 	flag.Parse()
 

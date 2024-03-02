@@ -1,17 +1,20 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-	. "main/calc"
+	"main/calc"
+	"os"
 )
 
 func main() {
-	flag.Parse()
+	if len(os.Args) == 1 {
+		fmt.Println("Не передано выражение")
+		os.Exit(-1)
+	}
 
-	var raw = flag.Arg(0)
+	var raw = os.Args[1]
 
-	var result = Eval(raw)
+	var result, _ = calc.Eval(raw)
 
 	fmt.Println(result)
 }

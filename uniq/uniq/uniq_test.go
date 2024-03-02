@@ -222,6 +222,65 @@ func TestSolve(t *testing.T) {
 				"Thanks.",
 			},
 		},
+		{
+			name: "Test -c -i -f 1 -s 1",
+			args: args{
+				lines: []string{
+					"I'a A lovE music.",
+					"I'b B love Music.",
+					"I'c C love musiC.",
+					"",
+					"Iffaas L music of Kartik.",
+					"Weddffas l music of Kartik.",
+					"Thanks.",
+				},
+				args: Args{
+					C: true,
+					D: false,
+					U: false,
+					I: true,
+					F: 1,
+					S: 1,
+				},
+			},
+			want: []string{
+				"3 I'c C love musiC.",
+				"1 ",
+				"2 Weddffas l music of Kartik.",
+				"1 Thanks.",
+			},
+		},
+		{
+			name: "Test сyrillic",
+			args: args{
+				lines: []string{
+					"Я люблю музыку.",
+					"Ь люблю музыку.",
+					"В люблю музыку.",
+					"",
+					"Н люблю музыку Картика.",
+					"В люблю музыку Картика.",
+					"Спасибо.",
+					"Ф люблю музыку Картика.",
+					"Я люблю музыку Картика.",
+				},
+				args: Args{
+					C: false,
+					D: false,
+					U: false,
+					I: false,
+					F: 0,
+					S: 1,
+				},
+			},
+			want: []string{
+				"Я люблю музыку.",
+				"",
+				"Н люблю музыку Картика.",
+				"Спасибо.",
+				"Ф люблю музыку Картика.",
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

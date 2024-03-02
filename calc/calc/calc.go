@@ -1,37 +1,44 @@
 package calc
 
-import "strconv"
+import (
+	"errors"
+	"strconv"
+)
 
-func ConvertToInt(x string) int {
-	var i, _ = strconv.Atoi(x)
-	return i
+func ConvertToFloat(x string) float64 {
+	var res, _ = strconv.ParseFloat(x, 64)
+	return res
 }
 
-func evalBinary(x string, y string, op string) int {
+func evalBinary(x string, y string, op string) float64 {
 	if op == "+" {
-		return ConvertToInt(x) + ConvertToInt(y)
+		return ConvertToFloat(x) + ConvertToFloat(y)
 	}
 
 	if op == "-" {
-		return ConvertToInt(x) - ConvertToInt(y)
+		return ConvertToFloat(x) - ConvertToFloat(y)
 	}
 
 	if op == "*" {
-		return ConvertToInt(x) * ConvertToInt(y)
+		return ConvertToFloat(x) * ConvertToFloat(y)
 	}
 
 	if op == "/" {
-		return ConvertToInt(x) / ConvertToInt(y)
+		return ConvertToFloat(x) / ConvertToFloat(y)
 	}
 
 	return -1
 }
 
-func Eval(raw string) int {
+func Eval(raw string) (float64, error) {
 
 	var result = Tokenize(raw)
 
-	var postfix = InfixToPostfix(result)
+	var postfix, err = InfixToPostfix(result)
+
+	if err != nil {
+		return 0, errors.New("expression not valid")
+	}
 
 	var res Stack = make([]string, 0)
 
@@ -46,7 +53,7 @@ func Eval(raw string) int {
 			res, y = res.Pop()
 			res, x = res.Pop()
 
-			res = res.Push(strconv.Itoa(evalBinary(x, y, token)))
+			res = res.Push(strconv.FormatFloat(evalBinary(x, y, token), 'E', -1, 64))
 
 		} else { // Если встретилось число
 
@@ -57,11 +64,9 @@ func Eval(raw string) int {
 	}
 
 	if len(res) > 1 {
-
-		panic("Expression not valid")
-
+		return 0, errors.New("expression not valid")
 	}
 
 	res, x = res.Pop()
-	return ConvertToInt(x)
+	return ConvertToFloat(x), nil
 }
