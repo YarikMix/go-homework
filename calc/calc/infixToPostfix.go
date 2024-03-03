@@ -41,7 +41,7 @@ func InfixToPostfix(tokenList []string) (Stack, error) {
 		} else if token == ")" {
 
 			if len(opStack) == 0 {
-				return nil, errors.New("Не удалось спарсить выражение")
+				return nil, errors.New("не удалось спарсить выражение")
 			}
 
 			opStack, tmp = opStack.Pop()

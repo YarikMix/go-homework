@@ -12,12 +12,12 @@ func ConvertToFloat(x string) (float64, error) {
 func evalBinary(x string, y string, op string) (float64, error) {
 	var num1, err1 = strconv.ParseFloat(x, 64)
 	if err1 != nil {
-		return 0, errors.New("Не удалось спарсить выражение")
+		return 0, errors.New("не удалось спарсить выражение")
 	}
 
 	var num2, err2 = strconv.ParseFloat(y, 64)
 	if err2 != nil {
-		return 0, errors.New("Не удалось спарсить выражение")
+		return 0, errors.New("не удалось спарсить выражение")
 	}
 
 	if op == "+" {
@@ -36,7 +36,7 @@ func evalBinary(x string, y string, op string) (float64, error) {
 		return num1 / num2, nil
 	}
 
-	return 0, errors.New("Не удалось спарсить выражение")
+	return 0, errors.New("не удалось спарсить выражение")
 }
 
 func Eval(raw string) (float64, error) {
@@ -64,7 +64,7 @@ func Eval(raw string) (float64, error) {
 		if ok {
 
 			if len(res) < 2 {
-				return 0, errors.New("Не получилось спарсить выражение")
+				return 0, errors.New("не получилось спарсить выражение")
 			}
 
 			res, y = res.Pop()
@@ -87,7 +87,7 @@ func Eval(raw string) (float64, error) {
 	}
 
 	if len(res) > 1 {
-		return 0, errors.New("Не получилось спарсить выражение")
+		return 0, errors.New("не получилось спарсить выражение")
 	}
 
 	res, x = res.Pop()

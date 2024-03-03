@@ -5,7 +5,7 @@ import (
 	"unicode"
 )
 
-func emptyNumberBufferAsLiteral(result []string, numberBuffer []rune) ([]string, []rune) {
+func emptyNumberBuffer(result []string, numberBuffer []rune) ([]string, []rune) {
 	if len(numberBuffer) > 0 {
 		result = append(result, string(numberBuffer))
 		numberBuffer = nil
@@ -70,7 +70,7 @@ func Tokenize(raw string) ([]string, error) {
 		} else if isLeftParenthesis(ch) {
 
 			if len(numberBuffer) > 0 {
-				result, numberBuffer = emptyNumberBufferAsLiteral(result, numberBuffer)
+				result, numberBuffer = emptyNumberBuffer(result, numberBuffer)
 				result = append(result, "*")
 			}
 
@@ -82,23 +82,23 @@ func Tokenize(raw string) ([]string, error) {
 
 		} else if isRightParenthesis(ch) {
 
-			result, numberBuffer = emptyNumberBufferAsLiteral(result, numberBuffer)
+			result, numberBuffer = emptyNumberBuffer(result, numberBuffer)
 			result = append(result, ")")
 
 		} else {
 
 			if isOperator(ch) {
-				result, numberBuffer = emptyNumberBufferAsLiteral(result, numberBuffer)
+				result, numberBuffer = emptyNumberBuffer(result, numberBuffer)
 				operatorBuffer = append(operatorBuffer, ch)
 			} else {
-				return nil, errors.New("Обнаружен неизвестный символ")
+				return nil, errors.New("обнаружен неизвестный символ")
 			}
 		}
 
 	}
 
 	if len(numberBuffer) > 0 {
-		result, numberBuffer = emptyNumberBufferAsLiteral(result, numberBuffer)
+		result, numberBuffer = emptyNumberBuffer(result, numberBuffer)
 	}
 
 	if len(operatorBuffer) > 0 {

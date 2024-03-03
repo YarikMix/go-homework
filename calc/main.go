@@ -8,7 +8,7 @@ import (
 
 func main() {
 	if len(os.Args) == 1 {
-		fmt.Println("Не передано выражение")
+		fmt.Println("не передано выражение")
 		os.Exit(-1)
 	}
 
