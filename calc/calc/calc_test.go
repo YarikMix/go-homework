@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestEval(t *testing.T) {
+func TestCalcSuccess(t *testing.T) {
 	type args struct {
 		raw string
 	}
@@ -67,7 +67,7 @@ func TestEval(t *testing.T) {
 	}
 }
 
-func TestEvalFail(t *testing.T) {
+func TestCalcFail(t *testing.T) {
 	type args struct {
 		raw string
 	}
@@ -110,6 +110,12 @@ func TestEvalFail(t *testing.T) {
 			name: "Test6",
 			args: args{
 				raw: "10%15",
+			},
+		},
+		{
+			name: "Test7",
+			args: args{
+				raw: "a+b",
 			},
 		},
 	}
