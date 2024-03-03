@@ -54,6 +54,10 @@ func Eval(raw string) (float64, error) {
 
 		if ok {
 
+			if len(res) < 2 {
+				return 0, errors.New("Не получилось спарсить выражение")
+			}
+
 			res, y = res.Pop()
 			res, x = res.Pop()
 
